@@ -1,0 +1,45 @@
+# Default values for your Helm chart
+replicaCount: 1
+image:
+  repository: hdf-docker-registry/cmon-mobile/service-updater
+  tag: latest
+  pullPolicy: IfNotPresent
+  imagePullSecrets:
+    - name: nexus-docker-secret
+
+# SQL Server configuration
+cmonCoreDb:
+  url: 10.0.52.12:53414
+
+# Kafka configuration
+kafka:
+  bootstrapServers: 10.0.73.91:9092
+
+nexus:
+  secret: nexus-secret
+
+db:
+  secret: db-secrets
+
+# Service configuration
+service:
+  name: updater-service-chart
+  type: LoadBalancer
+  port: 8081
+
+readinessProbe:
+  httpGet:
+    path: /ready
+    port: 8081
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: 8081
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+# Pod annotations
+podAnnotations: {}
